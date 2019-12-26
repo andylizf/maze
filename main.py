@@ -16,64 +16,19 @@ reward字典:
 经测试,跑完 30 个 episode,约耗时 30s
 """
 
-def toPoint(str):
-    pattern = re.compile(r'\((?P<x>\d), ?(?P<y>\d)\)')
-    match = pattern.match(str)
-    if match:
-        (x, y) = match.group('x', 'y')
-        return Point(int(x), int(y))
-    else:
-        return False
-
-
 if __name__ == '__main__':
-    refresh_interval = 0.05  # 该参数用于定时显示迷宫情况
-
     episode = 30  # 训练多少回合
 
     epsilon = 0.8  # 使用历史经验的概率, 若值为0.9,则有 90% 的情况下,会根据历史经验选择 action, 10% 的情况下,随机选择 action
     learning_rate = 0.01  # 根据公式可知,该值越大,则旧训练数据被保留的就越少
     discount_factor = 0.9  #
 
-    print('Press ^C at any time to quit.')
-    max_row = input("max_row: [4] ")
-    max_row = max_row if isinstance(max_row, int) else 4
-    
-    max_col = input("col: [4] ")
-    max_col = max_col if isinstance(max_col, int) else 4
+    from maze_game.game import startGame
+    env = startGame()
 
-    worker = toPoint(input("woker position: [(0, 0)] "))
-    worker = Point(0, 0) if not worker else worker
-
-    treasure = toPoint(input("treasure position: [(2, 2)] "))
-    treasure = Point(2, 2) if not treasure else treasure
-
-    obstacles = input("obstacles position: [(1, 2) (2, 1)] ").split()
-    obstacles = [toPoint(x) for x in obstacles]
-    obstacles = list(set(obstacles))
-    if False in obstacles or len(obstacles) == 0:
-        obstacles = [
-            Point(1, 2),
-            Point(2, 1),
-        ]
-
-    os.system('cls')
-    print("max_row:", max_row)
-    print("max_col:", max_col)
-    print("woker position:", worker.toString())
-    print("treasure position:", treasure.toString())
-    print("obstacles position:", [x.toString() for x in obstacles])
     key = input('Do you want to see the training process? [y] ')
     key = key == 'y' or key == ''
-
-    env = Game(
-        max_row=max_row,
-        max_col=max_col,
-        worker=worker,
-        treasure=treasure,
-        obstacles=obstacles,
-        refresh_interval=refresh_interval
-    )
+    
     agent = QLearningAgent(
         epsilon=epsilon,
         learning_rate=learning_rate,

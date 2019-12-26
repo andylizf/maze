@@ -2,6 +2,7 @@ import os
 import time
 
 import numpy as np
+import re
 
 class Game:
     class DIRECTION:
@@ -86,3 +87,52 @@ class Point:
 
     def clone(self):
         return Point(self.row, self.col)
+
+def toPoint(str):
+    pattern = re.compile(r'\((?P<x>\d), ?(?P<y>\d)\)')
+    match = pattern.match(str)
+    if match:
+        (x, y) = match.group('x', 'y')
+        return Point(int(x), int(y))
+    else:
+        return False
+
+refresh_interval = 0.05  # 该参数用于定时显示迷宫情况
+def startGame():
+    print('Press ^C at any time to quit.')
+    max_row = input("max_row: [4] ")
+    max_row = max_row if isinstance(max_row, int) else 4
+    
+    max_col = input("col: [4] ")
+    max_col = max_col if isinstance(max_col, int) else 4
+
+    worker = toPoint(input("woker position: [(0, 0)] "))
+    worker = Point(0, 0) if not worker else worker
+
+    treasure = toPoint(input("treasure position: [(2, 2)] "))
+    treasure = Point(2, 2) if not treasure else treasure
+
+    obstacles = input("obstacles position: [(1, 2) (2, 1)] ").split()
+    obstacles = [toPoint(x) for x in obstacles]
+    obstacles = list(set(obstacles))
+    if False in obstacles or len(obstacles) == 0:
+        obstacles = [
+            Point(1, 2),
+            Point(2, 1),
+        ]
+
+    os.system('cls')
+    print("max_row:", max_row)
+    print("max_col:", max_col)
+    print("woker position:", worker.toString())
+    print("treasure position:", treasure.toString())
+    print("obstacles position:", [x.toString() for x in obstacles])
+
+    return Game(
+        max_row=max_row,
+        max_col=max_col,
+        worker=worker,
+        treasure=treasure,
+        obstacles=obstacles,
+        refresh_interval=refresh_interval
+    )
