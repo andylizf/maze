@@ -35,10 +35,13 @@ if __name__ == '__main__':
     learning_rate = 0.01  # 根据公式可知,该值越大,则旧训练数据被保留的就越少
     discount_factor = 0.9  #
 
-    max_row = 4
-    max_col = 4
-
     print('Press ^C at any time to quit.')
+    max_row = input("max_row: [4] ")
+    max_row = max_row if isinstance(max_row, int) else 4
+    
+    max_col = input("col: [4] ")
+    max_col = max_col if isinstance(max_col, int) else 4
+
     worker = toPoint(input("woker position: [(0, 0)] "))
     worker = Point(0, 0) if not worker else worker
 
@@ -55,6 +58,8 @@ if __name__ == '__main__':
         ]
 
     os.system('cls')
+    print("max_row:", max_row)
+    print("max_col:", max_col)
     print("woker position:", worker.toString())
     print("treasure position:", treasure.toString())
     print("obstacles position:", [x.toString() for x in obstacles])

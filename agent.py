@@ -25,7 +25,7 @@ class QLearningAgent:
         return action
 
     def build_index(self, max_row, max_col):
-        from maze_game.game import Point
+        from maze_game.Game import Point
         index = []
         for row in range(max_row):
             for col in range(max_col):
